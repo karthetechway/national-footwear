@@ -111,7 +111,7 @@ input, select { font-family: var(--font-body); }
   height: 70px; background: rgba(255,255,255,0.85);
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(0,0,0,0.06);
-  position: sticky; top: 0; z-index: 1000;
+  position: sticky; top: 0; z-index: 2000;
   transition: all 0.4s ease;
 }
 .header.scrolled { box-shadow: 0 10px 30px rgba(0,0,0,0.04); height: 60px; }
@@ -1256,30 +1256,31 @@ input, select { font-family: var(--font-body); }
   .about-grid { grid-template-columns: 1fr; gap: 40px; }
 }
 @media (max-width: 768px) {
+  .header { height: auto; min-height: 80px; padding: 10px 0; }
+  .header-inner { flex-direction: column; gap: 10px; padding: 0 15px; }
+  .header-left { width: 100%; justify-content: center; margin-bottom: 5px; }
+  .header-right { width: 100%; justify-content: center; }
+  .logo-premium { font-size: 1.3rem; }
+  .logo-tagline { font-size: 0.5rem; letter-spacing: 0.15em; }
+  
   .nav { display: none; }
-  .hamburger { display: flex; }
-  .mobile-nav { display: none; flex-direction: column; }
-  .mobile-nav.open { display: flex; }
-  .hero { padding: 50px 20px; }
-  .hero-title { font-size: 2.2rem; }
-  .hero-stats { gap: 20px; }
-  .category-grid { grid-template-columns: 1fr 1fr; }
-  .cat-card { height: 220px; }
-  .offer-cards { grid-template-columns: 1fr 1fr; gap: 14px; }
-  .modal-grid { grid-template-columns: 1fr; }
-  .products-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
-  .footer-grid { grid-template-columns: 1fr; gap: 24px; }
-  .filter-bar { flex-direction: column; align-items: flex-start; }
-  .filter-right { flex-direction: column; width: 100%; }
-  .filter-right select { width: 100%; }
-  .payment-methods { grid-template-columns: 1fr; }
-  .wholesale-badge-btn { display: none; }
-  .newsletter-form { flex-direction: column; }
-  .newsletter-form input { border-radius: 12px; }
+  .hamburger { display: flex; order: 3; }
+  .mobile-nav { display: none; flex-direction: column; top: 0; height: 100vh; right: -100%; width: 85%; z-index: 3000; }
+  .mobile-nav.open { display: flex; right: 0; }
+  
+  .hero { padding: 40px 20px; text-align: center; }
+  .hero-title { font-size: 2.1rem; }
+  .category-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .cat-card { height: 180px; }
+  
+  .floating-actions { bottom: 15px; right: 15px; gap: 12px; }
+  .whatsapp-fab { width: 50px; height: 50px; }
+  .fab-cart { width: 50px; height: 50px; }
 }
+
 @media (max-width: 480px) {
+  .logo-premium { font-size: 1.1rem; }
   .category-grid { grid-template-columns: 1fr; }
-  .offer-cards { grid-template-columns: 1fr; }
-  .hero-stats { gap: 16px; flex-wrap: wrap; justify-content: center; }
-  .form-grid { grid-template-columns: 1fr; }
+  .header-actions { gap: 2px; }
+  .btn-icon { width: 36px; height: 36px; }
 }
