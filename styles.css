@@ -1256,12 +1256,18 @@ input, select { font-family: var(--font-body); }
   .about-grid { grid-template-columns: 1fr; gap: 40px; }
 }
 @media (max-width: 768px) {
-  .header { height: auto; min-height: 80px; padding: 10px 0; }
-  .header-inner { flex-direction: column; gap: 10px; padding: 0 15px; }
-  .header-left { width: 100%; justify-content: center; margin-bottom: 5px; }
+  .header { height: auto; min-height: 70px; padding: 12px 0; background: white; }
+  .header-inner { flex-direction: column; gap: 8px; padding: 0 15px; }
+  .header-left { width: 100%; justify-content: center; margin-bottom: 2px; }
   .header-right { width: 100%; justify-content: center; }
-  .logo-premium { font-size: 1.3rem; }
-  .logo-tagline { font-size: 0.5rem; letter-spacing: 0.15em; }
+  .header-actions { gap: 12px; } /* Tighter spacing for mobile icons */
+  
+  /* Hide non-essential icons on small mobile to clean up header */
+  .header-actions .btn-icon[title="Account"],
+  .header-actions .btn-icon[title="Wishlist"] { display: none; }
+
+  .logo-premium { font-size: 1.25rem; }
+  .logo-tagline { font-size: 0.48rem; letter-spacing: 0.12em; }
   
   .nav { display: none; }
   .hamburger { display: flex; order: 3; }
@@ -1269,18 +1275,17 @@ input, select { font-family: var(--font-body); }
   .mobile-nav.open { display: flex; right: 0; }
   
   .hero { padding: 40px 20px; text-align: center; }
-  .hero-title { font-size: 2.1rem; }
-  .category-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-  .cat-card { height: 180px; }
+  .hero-title { font-size: 1.9rem; line-height: 1.2; }
+  .category-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .cat-card { height: 160px; }
   
-  .floating-actions { bottom: 15px; right: 15px; gap: 12px; }
-  .whatsapp-fab { width: 50px; height: 50px; }
-  .fab-cart { width: 50px; height: 50px; }
+  .floating-actions { bottom: 20px; right: 20px; gap: 12px; }
+  .whatsapp-fab { width: 55px; height: 55px; box-shadow: 0 8px 24px rgba(37,211,102,0.4); }
+  .fab-cart { width: 55px; height: 55px; box-shadow: 0 8px 24px rgba(13,27,42,0.2); }
 }
 
 @media (max-width: 480px) {
-  .logo-premium { font-size: 1.1rem; }
-  .category-grid { grid-template-columns: 1fr; }
-  .header-actions { gap: 2px; }
-  .btn-icon { width: 36px; height: 36px; }
+  .logo-premium { font-size: 1.15rem; }
+  .hero-title { font-size: 1.7rem; }
+  .header-actions { gap: 15px; }
 }
