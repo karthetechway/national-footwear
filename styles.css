@@ -32,10 +32,13 @@
 html, body { 
   overflow-x: hidden !important; 
   max-width: 100% !important; 
-  width: 100%; 
+  width: 100% !important;
   position: relative; 
+  margin: 0;
+  padding: 0;
   -webkit-overflow-scrolling: touch;
 }
+html { scroll-behavior: smooth; }
 body {
   font-family: var(--font-body);
   background: var(--bg);
@@ -1129,6 +1132,72 @@ input, select { font-family: var(--font-body); }
 .wb-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 0.8rem; color: var(--text2); font-weight: 600; }
 .wb-item span:first-child { font-size: 1.5rem; }
 
+/* 📜 ABOUT SECTION */
+.about-section {
+  padding: 100px 0;
+  background: #ffffff;
+}
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.about-text {
+  font-size: 17px;
+  line-height: 1.8;
+  color: #444;
+  margin-bottom: 32px;
+}
+.about-features {
+  display: grid;
+  gap: 24px;
+}
+.af-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.af-icon {
+  font-size: 24px;
+  background: #f8f9fa;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+}
+.about-visual {
+  position: relative;
+}
+.about-img-wrap {
+  border-radius: 32px;
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+}
+.about-img {
+  width: 100%;
+  display: block;
+  transition: transform 0.5s ease;
+}
+.about-img-wrap:hover .about-img {
+  transform: scale(1.05);
+}
+.about-stat-overlay {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  background: white;
+  padding: 20px 32px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+}
+.about-stat-overlay strong { font-size: 24px; }
+.about-stat-overlay span { font-size: 13px; color: #666; }
+
 /* ===== TOAST ===== */
 .toast {
   position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
@@ -1178,14 +1247,24 @@ input, select { font-family: var(--font-body); }
 .newsletter-form input:focus { border-color: var(--accent); background: rgba(255,255,255,0.08); }
 .newsletter-form .btn-primary { padding: 12px 20px; white-space: nowrap; }
 
-.footer-bottom { border-top: 1px solid rgba(255,255,255,0.05); padding-top: 30px; }
-.footer-bottom-inner { display: flex; justify-content: space-between; align-items: center; }
-.copyright-area { color: rgba(255,255,255,0.4); font-size: 0.85rem; }
-.credit-area { color: rgba(255,255,255,0.4); font-size: 0.85rem; }
-.payment-methods { display: flex; align-items: center; gap: 15px; }
+.footer-bottom { 
+  border-top: 1px solid rgba(255,255,255,0.08); 
+  padding-top: 40px; 
+  margin-top: 40px;
+}
+.footer-bottom-inner { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  gap: 30px;
+}
+.copyright-area { flex: 1; color: rgba(255,255,255,0.4); font-size: 0.85rem; text-align: left; }
+.credit-area { flex: 1; color: rgba(255,255,255,0.4); font-size: 0.85rem; text-align: center; }
+.payment-methods { flex: 1; display: flex; align-items: center; gap: 15px; justify-content: flex-end; }
 .pay-badge {
-  background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 6px;
-  font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.08); padding: 5px 12px; border-radius: 6px;
+  font-size: 0.75rem; font-weight: 800; color: rgba(255,255,255,0.7);
+  letter-spacing: 0.5px;
 }
 
 /* 🧾 SUCCESS BILLING CARD */
