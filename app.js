@@ -20,10 +20,18 @@ function resolveImagePath(path) {
   // If it's already a full URL (Firebase/Cloud), return as is
   if (path.startsWith('http')) return path;
   
-  // Convert local 'images/...' to Firebase Storage URL
+  // Normalize Windows backslashes to Web forward slashes
+  let cleanPath = path.replace(/\\/g, '/');
+  
+  // Ensure the path matches the 'Images' (Capital I) structure if that's how it was uploaded
+  if (cleanPath.toLowerCase().startsWith('images/')) {
+    cleanPath = 'Images' + cleanPath.substring(6);
+  }
+
+  // Convert to Firebase Storage URL
   // Format: https://firebasestorage.googleapis.com/v0/b/[BUCKET]/o/[PATH]?alt=media
   const bucket = FIREBASE_CONFIG.storageBucket;
-  const encodedPath = encodeURIComponent(path);
+  const encodedPath = encodeURIComponent(cleanPath);
   return `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${encodedPath}?alt=media`;
 }
 
