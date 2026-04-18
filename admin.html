@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: 'unsafe-inline'; script-src 'self' https://www.gstatic.com https://www.googleapis.com https://fonts.googleapis.com https://fonts.gstatic.com 'unsafe-inline';">
+<title>Admin Portal — National Agencies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<!-- ===================== LOGIN SCREEN ===================== -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-emblem">👟</div>
+      <div>
+        <div class="login-brand" id="loginBrandName">National Agencies</div>
+        <div class="login-sub">Admin Portal</div>
+      </div>
+    </div>
+    <h1>Welcome Back</h1>
+    <p class="login-desc">Sign in with your administrator account to manage products and orders.</p>
+    <div class="login-form" id="loginForm">
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="adminEmail" placeholder="admin@nationalagencies.in" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="pass-wrap">
+          <input type="password" id="adminPassword" placeholder="Enter your password" autocomplete="current-password">
+          <button class="show-pass" onclick="togglePasswordVisibility()" type="button">👁</button>
+        </div>
+      </div>
+      <div class="login-error" id="loginError" style="display:none"></div>
+      <button class="btn-login" onclick="handleLogin()" id="loginBtn">
+        <span id="loginBtnText">Sign In</span>
+      </button>
+      <a href="index.html" class="back-to-store">← Back to Store</a>
+      <div style="margin-top:20px; text-align:center; font-size:11px; opacity:0.6; color:var(--text3);">
+        Designed & Developed by <a href="#" style="color:var(--primary); text-decoration:none; font-weight:700;">Techway-Solution</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ADMIN DASHBOARD ===================== -->
+<div id="dashboard" class="dashboard" style="display:none">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="login-emblem" style="width:40px;height:40px;font-size:20px">👟</div>
+      <div>
+        <div class="sidebar-brand" id="sidebarBrand">NATIONAL AGENCIES</div>
+        <div class="sidebar-sub">Admin Portal</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" id="navOverview" onclick="switchTab('overview')">
+        <span class="nav-icon">📊</span> Overview
+      </button>
+      <button class="nav-item" id="navProducts" onclick="switchTab('products')">
+        <span class="nav-icon">📦</span> Products
+      </button>
+      <button class="nav-item" id="navOrders" onclick="switchTab('orders')">
+        <span class="nav-icon">🛒</span> Orders
+        <span class="nav-badge" id="pendingOrdersBadge">0</span>
+      </button>
+      <button class="nav-item" id="navWholesale" onclick="switchTab('wholesale')">
+        <span class="nav-icon">🏭</span> Wholesale Orders
+      </button>
+      <button class="nav-item" id="navReports" onclick="switchTab('reports')">
+        <span class="nav-icon">📋</span> Reports
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="admin-user">
+        <div class="admin-avatar" id="adminAvatar">A</div>
+        <div>
+          <div class="admin-name" id="adminName">Administrator</div>
+          <div class="admin-email-display" id="adminEmailDisplay">admin@store.in</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="handleLogout()">Logout</button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Top Bar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+        <h2 class="page-title" id="pageTitle">Overview</h2>
+      </div>
+      <div class="topbar-right">
+        <span id="topbarDate" class="topbar-date"></span>
+        <div class="session-timer" id="sessionTimer">Session: <span id="sessionTime">30:00</span></div>
+      </div>
+    </div>
+
+    <!-- ========== OVERVIEW TAB ========== -->
+    <div class="tab-panel active" id="tabOverview">
+      <div class="stat-cards">
+        <div class="stat-card stat-blue">
+          <div class="stat-icon">🛒</div>
+          <div class="stat-body">
+            <div class="stat-value" id="statTotalOrders">0</div>
+            <div class="stat-label">Total Orders</div>
+          </div>
+        </div>
+        <div class="stat-card stat-green">
+          <div class="stat-icon">💰</div>
+          <div class="stat-body">
+            <div class="stat-value" id="statRevenue">₹0</div>
+            <div class="stat-label">Total Revenue</div>
+          </div>
+        </div>
+        <div class="stat-card stat-amber">
+          <div class="stat-icon">⏳</div>
+          <div class="stat-body">
+            <div class="stat-value" id="statPending">0</div>
+            <div class="stat-label">Pending Orders</div>
+          </div>
+        </div>
+        <div class="stat-card stat-purple">
+          <div class="stat-icon">📦</div>
+          <div class="stat-body">
+            <div class="stat-value" id="statProducts">0</div>
+            <div class="stat-label">Active Products (SKUs)</div>
+          </div>
+        </div>
+        <div class="stat-card stat-teal">
+          <div class="stat-icon">🏭</div>
+          <div class="stat-body">
+            <div class="stat-value" id="statWholesaleOrders">0</div>
+            <div class="stat-label">Wholesale Orders</div>
+          </div>
+        </div>
+        <div class="stat-card stat-red">
+          <div class="stat-icon">🏬</div>
+          <div class="stat-body">
+            <div class="stat-value" id="statRetailOrders">0</div>
+            <div class="stat-label">Retail Orders</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="overview-grid">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Recent Orders</h3>
+            <button class="btn-sm" onclick="switchTab('orders')">View All</button>
+          </div>
+          <div id="recentOrdersList"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Top Products by SKU</h3>
+          </div>
+          <div id="topProductsList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== PRODUCTS TAB ========== -->
+    <div class="tab-panel" id="tabProducts">
+      <div class="tab-actions">
+        <div class="search-input-wrap">
+          <input type="text" id="productSearch" placeholder="Search by name, SKU, brand..." oninput="filterAdminProducts()">
+        </div>
+        <button class="btn-primary-sm" onclick="openAddProductModal()">+ Add Product</button>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table" id="productsTable">
+          <thead>
+            <tr>
+              <th>SKU</th>
+              <th>Product</th>
+              <th>Brand</th>
+              <th>Category</th>
+              <th>Retail ₹</th>
+              <th>Wholesale ₹</th>
+              <th>MOQ</th>
+              <th>Stock</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="productsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========== ORDERS TAB ========== -->
+    <div class="tab-panel" id="tabOrders">
+      <div class="tab-actions">
+        <div class="search-input-wrap">
+          <input type="text" id="orderSearch" placeholder="Search by Order ID, customer, phone..." oninput="filterAdminOrders()">
+        </div>
+        <select id="orderStatusFilter" onchange="filterAdminOrders()" class="filter-select">
+          <option value="all">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="shipped">Shipped</option>
+          <option value="delivered">Delivered</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+        <select id="orderTypeFilter" onchange="filterAdminOrders()" class="filter-select">
+          <option value="all">All Types</option>
+          <option value="retail">Retail Only</option>
+          <option value="wholesale">Wholesale Only</option>
+        </select>
+        <button class="btn-sm" onclick="exportOrdersCSV()">⬇ Export CSV</button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data-table" id="ordersTable">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Type</th>
+              <th>Customer</th>
+              <th>Phone</th>
+              <th>Items</th>
+              <th>Amount</th>
+              <th>Payment</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTableBody"></tbody>
+        </table>
+        <div class="empty-state" id="ordersEmpty" style="display:none">No orders found.</div>
+      </div>
+    </div>
+
+    <!-- ========== WHOLESALE TAB ========== -->
+    <div class="tab-panel" id="tabWholesale">
+      <div class="wholesale-info-banner">
+        <span>🏭</span>
+        <div>
+          <strong>Wholesale Orders</strong>
+          <p>These are bulk orders placed by wholesale customers. Review and confirm dispatch separately.</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table" id="wholesaleTable">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Business</th>
+              <th>Customer</th>
+              <th>GST No.</th>
+              <th>Items</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="wholesaleTableBody"></tbody>
+        </table>
+        <div class="empty-state" id="wholesaleEmpty" style="display:none">No wholesale orders yet.</div>
+      </div>
+    </div>
+
+    <!-- ========== REPORTS TAB ========== -->
+    <div class="tab-panel" id="tabReports">
+      <div class="reports-grid">
+        <div class="panel">
+          <div class="panel-header"><h3>Revenue Breakdown</h3></div>
+          <div id="revenueBreakdown"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><h3>Orders by Category</h3></div>
+          <div id="categoryBreakdown"></div>
+        </div>
+        <div class="panel full-width">
+          <div class="panel-header">
+            <h3>SKU-wise Sales</h3>
+            <button class="btn-sm" onclick="exportSKUReport()">⬇ Export</button>
+          </div>
+          <div id="skuReport"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ========== ADD/EDIT PRODUCT MODAL ========== -->
+<div class="modal-overlay" id="productFormModal" style="display:none">
+  <div class="modal-box product-form-box">
+    <div class="modal-box-header">
+      <h3 id="productFormTitle">Add New Product</h3>
+      <button onclick="closeProductModal()">✕</button>
+    </div>
+    <div class="product-form-grid">
+      <div class="form-group">
+        <label>SKU Code *</label>
+        <input type="text" id="pSku" placeholder="NF-M-013" class="mono">
+      </div>
+      <div class="form-group">
+        <label>Brand *</label>
+        <input type="text" id="pBrand" placeholder="e.g. Bata, Liberty">
+      </div>
+      <div class="form-group full">
+        <label>Product Name *</label>
+        <input type="text" id="pName" placeholder="e.g. Kolhapuri Classic">
+      </div>
+      <div class="form-group">
+        <label>Category *</label>
+        <select id="pCategory">
+          <option value="men">Men</option>
+          <option value="women">Women</option>
+          <option value="kids">Kids</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Type *</label>
+        <input type="text" id="pType" placeholder="e.g. Leather Chappal">
+      </div>
+      <div class="form-group">
+        <label>Retail Price (₹) *</label>
+        <input type="number" id="pPrice" placeholder="999" min="1">
+      </div>
+      <div class="form-group">
+        <label>Original / MRP (₹) *</label>
+        <input type="number" id="pOrigPrice" placeholder="1499" min="1">
+      </div>
+      <div class="form-group">
+        <label>Wholesale Price (₹) *</label>
+        <input type="number" id="pWsPrice" placeholder="749" min="1">
+      </div>
+      <div class="form-group">
+        <label>MOQ (Min Order Qty) *</label>
+        <input type="number" id="pMoq" placeholder="6" min="1">
+      </div>
+      <div class="form-group">
+        <label>Available Sizes (comma-separated)</label>
+        <input type="text" id="pSizes" placeholder="6,7,8,9,10,11,12">
+      </div>
+      <div class="form-group">
+        <label>Unavailable Sizes (comma-separated)</label>
+        <input type="text" id="pUnavail" placeholder="11">
+      </div>
+      <div class="form-group">
+        <label>Badge</label>
+        <select id="pBadge">
+          <option value="">None</option>
+          <option value="bestseller">Best Seller</option>
+          <option value="new">New Arrival</option>
+          <option value="sale">Sale</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>In Stock</label>
+        <select id="pInStock">
+          <option value="true">Yes</option>
+          <option value="false">No (Out of Stock)</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label>Image URL (Color 1)</label>
+        <input type="url" id="pImg1" placeholder="https://images.unsplash.com/...">
+      </div>
+      <div class="form-group full">
+        <label>Features (comma-separated)</label>
+        <input type="text" id="pFeatures" placeholder="Genuine Leather, Handcrafted, Anti-slip Sole">
+      </div>
+      <div class="form-group full">
+        <label>Description</label>
+        <textarea id="pDesc" rows="3" placeholder="Brief product description..."></textarea>
+      </div>
+    </div>
+    <div class="modal-box-footer">
+      <button class="btn-cancel" onclick="closeProductModal()">Cancel</button>
+      <button class="btn-save" onclick="saveProduct()">Save Product</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== ORDER DETAIL MODAL ========== -->
+<div class="modal-overlay" id="orderDetailModal" style="display:none">
+  <div class="modal-box">
+    <div class="modal-box-header">
+      <h3 id="orderDetailTitle">Order Details</h3>
+      <button onclick="closeOrderDetailModal()">✕</button>
+    </div>
+    <div id="orderDetailBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="adminToast"></div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="config.js"></script>
+<script src="products.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

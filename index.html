@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: 'unsafe-inline'; script-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://www.gstatic.com https://www.googleapis.com 'unsafe-inline';">
+<title>National Agencies — India's Premium Multi-Brand Footwear Store</title>
+<meta name="description" content="National Agencies — India's leading multi-brand footwear store. Shop Bata, Woodland, Liberty, Paragon, Relaxo and more. Retail & Wholesale available. Free delivery above ₹499.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ===================== WHOLESALE LOGIN MODAL ===================== -->
+<div class="modal-overlay" id="wholesaleModal">
+  <div class="modal wholesale-login-modal" id="wholesaleModalContent">
+    <button class="modal-close" onclick="closeWholesaleModal()">✕</button>
+    <div class="wholesale-modal-body">
+      <div class="wholesale-modal-icon">🏭</div>
+      <h2>Wholesale Login</h2>
+      <p>Enter your wholesale access password to unlock bulk pricing and MOQ details.</p>
+      <div class="wholesale-form">
+        <input type="password" id="wholesalePasswordInput" placeholder="Enter wholesale password" autocomplete="off">
+        <div id="wholesaleError" class="wholesale-error" style="display:none">Incorrect password. Please try again.</div>
+        <button class="btn-primary" onclick="submitWholesaleLogin()" id="wholesaleLoginBtn">Access Wholesale Prices</button>
+      </div>
+      <div class="wholesale-benefits">
+        <div class="wb-item"><span>📦</span><span>Bulk Pricing</span></div>
+        <div class="wb-item"><span>🏷️</span><span>Up to 25% Off</span></div>
+        <div class="wb-item"><span>🚚</span><span>Priority Dispatch</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<header class="header sticky" id="header">
+  <div class="header-inner">
+    <div class="header-left">
+      <a href="index.html" class="logo" id="mainLogo">
+        <div class="logo-text-wrap">
+          <span class="logo-premium" id="logoText">National Agencies</span>
+          <span class="logo-tagline" id="logoSub">Multi-Brand Footwear Store</span>
+        </div>
+      </a>
+      <nav class="nav" id="mainNav">
+        <a href="index.html">Home</a>
+        <div class="nav-dropdown">
+          <a href="#" class="drop-trigger" onclick="filterProducts('men'); scrollToSection('products'); return false;">Men <small>⌵</small></a>
+        </div>
+        <div class="nav-dropdown">
+          <a href="#" class="drop-trigger" onclick="filterProducts('women'); scrollToSection('products'); return false;">Women <small>⌵</small></a>
+        </div>
+        <div class="nav-dropdown">
+          <a href="#" class="drop-trigger" onclick="filterProducts('kids'); scrollToSection('products'); return false;">Kids <small>⌵</small></a>
+          <div class="dropdown-content">
+            <a href="#" onclick="filterProducts('boys'); scrollToSection('products'); closeMobileNav(); return false;">Boys</a>
+            <a href="#" onclick="filterProducts('girls'); scrollToSection('products'); closeMobileNav(); return false;">Girls</a>
+            <a href="#" onclick="filterProducts('school'); scrollToSection('products'); closeMobileNav(); return false;">School Collection</a>
+          </div>
+        </div>
+        <a href="#" onclick="showPolicy('about'); return false;">About</a>
+      </nav>
+    </div>
+
+    <div class="header-right">
+      <div class="header-actions">
+        <button class="btn-icon" id="searchBtn" title="Search">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </button>
+        <button class="btn-icon" title="Account" onclick="window.location.href='login.html'">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+        <button class="btn-icon badge-wrapper" id="wishlistBtn" onclick="openWishlist()" title="Wishlist">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span class="badge" id="wishlistCount" style="display:none">0</span>
+        </button>
+        <button class="btn-icon badge-wrapper" id="cartBtn" onclick="openCart()" title="Cart">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span class="badge" id="cartCount" style="display:none">0</span>
+        </button>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- Categories Section -->
+  <div class="mobile-nav" id="mobileNav">
+    <div class="mobile-nav-filters">
+        <select id="mobileBrandFilter" onchange="syncFilters('brand', this.value)">
+          <option value="all">Select Brand</option>
+        </select>
+        <select id="mobileSortSelect" onchange="syncFilters('sort', this.value)">
+          <option value="default">Sort: Default</option>
+          <option value="price-low">Price Low-High</option>
+          <option value="price-high">Price High-Low</option>
+        </select>
+    </div>
+    <a href="#brands" onclick="closeMobileNav()">Brands</a>
+    <a href="#" onclick="filterProducts('men'); closeMobileNav(); return false;">Men</a>
+    <a href="#" onclick="filterProducts('women'); closeMobileNav(); return false;">Women</a>
+    <a href="#" onclick="filterProducts('boys'); closeMobileNav(); return false;">Boys</a>
+    <a href="#" onclick="filterProducts('girls'); closeMobileNav(); return false;">Girls</a>
+    <a href="#offers" onclick="closeMobileNav()">Offers</a>
+    <button class="btn-primary" onclick="closeMobileNav(); openWholesaleModal()">🏭 Wholesale Login</button>
+  </div>
+</header>
+
+<!-- ===================== SEARCH OVERLAY ===================== -->
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Search chappals, sandals, brands, SKU codes..." autocomplete="off">
+    <button onclick="closeSearch()">✕</button>
+  </div>
+</div>
+
+<!-- ===================== WHOLESALE BANNER ===================== -->
+<div class="wholesale-top-bar" id="wholesaleTopBar" style="display:none">
+  <span>🏭 Wholesale Mode Active — Bulk prices applied | <button onclick="exitWholesale()" class="ws-exit-btn">Exit Wholesale</button></span>
+</div>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+      <h1 class="hero-title" id="heroTitle">
+        Step Into <span class="highlight">Perfection</span>
+      </h1>
+    <p class="hero-sub">Experience the legacy of National Agencies. Curating the world's finest brands with unmatched quality since 1995. Style and durability in every step.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="scrollToSection('products')">Shop Collection</button>
+      <button class="btn-ghost" onclick="openWholesaleModal()">Wholesale Inquiry</button>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-img-wrap">
+      <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1000&q=80" alt="New Arrival Special" class="hero-img">
+      <div class="hero-badge-float">Premium Collection 2025</div>
+    </div>
+  </section>
+
+  <!-- ===================== CATEGORIES ===================== -->
+<section class="categories" id="collections">
+  <div class="container">
+    <h2 class="section-title">Shop by Category</h2>
+    <div class="category-grid">
+      <div class="cat-card" id="men" onclick="filterProducts('men'); scrollToSection('products')">
+        <img src="images/men.jpg" alt="Men's Collection">
+        <div class="cat-overlay"></div>
+        <div class="cat-info">
+          <h3>Men</h3>
+          <p>Premium Sandals & Sneakers</p>
+          <span class="cat-cta">Explore →</span>
+        </div>
+      </div>
+      <div class="cat-card" id="women" onclick="filterProducts('women'); scrollToSection('products')">
+        <img src="images/women.jpg" alt="Women's Footwear">
+        <div class="cat-overlay"></div>
+        <div class="cat-info">
+          <h3>Women</h3>
+          <p>Sandals, Flats, Lifestyle</p>
+          <span class="cat-cta">Explore →</span>
+        </div>
+      </div>
+      <div class="cat-card" id="kids" onclick="filterProducts('kids'); scrollToSection('products')">
+        <img src="https://images.unsplash.com/photo-1514989940723-e8e51635b782?w=800&q=80" alt="Kids' Footwear">
+        <div class="cat-overlay"></div>
+        <div class="cat-info">
+          <h3>Kids</h3>
+          <p>Durable & Comfortable Choice</p>
+          <span class="cat-cta">Explore →</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PRODUCTS GRID ===================== -->
+<section class="products-section" id="products">
+  <div class="container">
+    <div class="products-grid" id="productsGrid">
+      <!-- Products rendered by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ===================== BRAND BANNER (Optimized Placement) ===================== -->
+<section class="brands-section" id="brands">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Our Featured Partners</h2>
+    </div>
+    <div class="brands-track-wrap">
+      <div class="brands-track" id="brandsTrack">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+    <div class="brand-filter-pills" id="brandFilterPills">
+      <!-- Rendered by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ===================== OFFERS BANNER ===================== -->
+<section class="offers-banner" id="offers">
+  <div class="container">
+    <h2 class="section-title" style="text-align:center;margin-bottom:1.5rem;">Why National Footwear</h2>
+    <div class="offer-cards">
+      <div class="offer-card">
+        <div class="offer-card-bg" style="background-image: url('https://images.unsplash.com/photo-1595246140625-573b715d11dc?w=600&q=80')"></div>
+        <div class="offer-card-overlay"></div>
+        <div class="offer-icon-badge">🚀</div>
+        <div class="offer-card-content">
+          <h3>Fast Delivery</h3>
+          <p>Dispatched within 24h. Free over <strong>₹499</strong>.</p>
+        </div>
+      </div>
+      <div class="offer-card">
+        <div class="offer-card-bg" style="background-image: url('https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?w=600&q=80')"></div>
+        <div class="offer-card-overlay"></div>
+        <div class="offer-icon-badge">🛡️</div>
+        <div class="offer-card-content">
+          <h3>Quality Assured</h3>
+          <p>Every pair inspected for perfection before dispatch.</p>
+        </div>
+      </div>
+      <div class="offer-card">
+        <div class="offer-card-bg" style="background-image: url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=80')"></div>
+        <div class="offer-card-overlay"></div>
+        <div class="offer-icon-badge">🏭</div>
+        <div class="offer-card-content">
+          <h3>Wholesale Rates</h3>
+          <p>Bulk pricing for retailers. Min. order <strong>₹5,000</strong>.</p>
+        </div>
+      </div>
+      <div class="offer-card">
+        <div class="offer-card-bg" style="background-image: url('https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=600&q=80')"></div>
+        <div class="offer-card-overlay"></div>
+        <div class="offer-icon-badge">🏆</div>
+        <div class="offer-card-content">
+          <h3>Top Brands</h3>
+          <p>Walkaroo, Bata, Paragon & more. 100% Original.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section removed for space optimization -->
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo footer-logo">
+          <div class="logo-text-wrap">
+            <span class="logo-premium" style="color:white">National Agencies</span>
+            <span class="logo-tagline" style="color:var(--accent)">Multi-Brand Footwear Store</span>
+          </div>
+        </a>
+        <p class="footer-desc">India's leading multi-brand footwear store. Providing premium quality and unmatched comfort since 2020.</p>
+        <div class="social-links">
+          <a href="#" id="fbLink" title="Facebook" aria-label="Facebook">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="#" id="igLink" title="Instagram" aria-label="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="#" id="ytLink" title="YouTube" aria-label="YouTube">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-1.96C18.88 4 12 4 12 4s-6.88 0-8.6.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.4 19.54C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#fff"/></svg>
+          </a>
+          <a href="https://wa.me/917904042547" id="waLink" title="WhatsApp" aria-label="WhatsApp" target="_blank">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#" onclick="showPolicy('about'); return false;">Brand Story</a></li>
+          <li><a href="admin.html" style="color:var(--accent); font-weight:700;">Store Administration</a></li>
+          <li><a href="#" onclick="scrollToSection('brands'); return false;">Our Brands</a></li>
+          <li><a href="#" onclick="scrollToSection('products'); return false;">All Products</a></li>
+          <li><a href="#" onclick="scrollToSection('offers'); return false;">Special Offers</a></li>
+          <li><a href="#" onclick="openWholesaleModal(); return false;">Wholesale Inquiry</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Policies</h4>
+        <ul>
+          <li><a href="#" onclick="showPolicy('returns'); return false;">Return Policy</a></li>
+          <li><a href="#" onclick="showPolicy('privacy'); return false;">Privacy Policy</a></li>
+          <li><a href="#" onclick="showPolicy('terms'); return false;">Terms of Use</a></li>
+          <li><a href="#" onclick="showPolicy('shipping'); return false;">Shipping Info</a></li>
+          <li><a href="#" onclick="showSizeGuide(); return false;">Size Guide</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact Us</h4>
+        <p id="footerContactInfo" class="footer-contact">
+          📧 <span id="footerEmail">info@nationalfootwear.in</span><br>
+          📞 <span id="footerPhone">+91 79040 42547</span><br>
+          📍 <span id="footerAddress">5/3, Harijan Colony, UTHAMAPLAYAM, THENI - 625533</span>
+        </p>
+        <div style="margin-top:15px">
+          <input type="email" id="newsletterEmail" placeholder="Your Email" style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.05); color:white; font-size:12px; margin-bottom:8px">
+          <button class="btn-primary full-width" style="padding:8px; font-size:12px" onclick="subscribeNewsletter()">Subscribe</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copyright-area" id="footerCopyright">© 2026 National Agencies</div>
+      <div class="credit-area">Designed and Developed by <a href="#" class="dev-credit">Techway-Solution</a></div>
+      <div class="payment-icons">
+        <span>UPI</span><span>Visa</span><span>MC</span><span>RuPay</span><span>NetBanking</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================== PRODUCT MODAL ===================== -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal" id="modalContent">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-grid">
+      <div class="modal-images" id="modalImages"></div>
+      <div class="modal-info" id="modalInfo"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CART SIDEBAR ===================== -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<aside class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <div>
+      <h3>Your Cart</h3>
+      <span class="cart-mode-badge" id="cartModeBadge">Retail</span>
+    </div>
+    <button onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-total">
+      <span>Total</span>
+      <span id="cartTotal">₹0</span>
+    </div>
+    <div class="wholesale-min-order" id="wholesaleMinOrder" style="display:none">
+      <small id="minOrderText"></small>
+    </div>
+    <button class="btn-primary full-width" onclick="openCheckout()" id="checkoutBtn">Proceed to Checkout</button>
+  </div>
+</aside>
+
+<!-- ===================== WISHLIST SIDEBAR ===================== -->
+<div class="cart-overlay" id="wishlistOverlay" onclick="closeWishlist()"></div>
+<aside class="cart-sidebar" id="wishlistSidebar">
+  <div class="cart-header">
+    <div>
+      <h3>Your Wishlist</h3>
+    </div>
+    <button onclick="closeWishlist()">✕</button>
+  </div>
+  <div class="cart-items" id="wishlistItems"></div>
+</aside>
+
+<!-- ===================== POLICY MODAL ===================== -->
+<div class="modal-overlay" id="policyModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closePolicy()">✕</button>
+    <div class="policy-header">
+      <h2 class="policy-title" id="policyTitle">Policy Title</h2>
+    </div>
+    <div class="policy-body" id="policyContent"></div>
+    <div style="margin-top:20px; text-align:right">
+      <button class="btn-primary" onclick="closePolicy()">I Understand</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CHECKOUT MODAL ===================== -->
+<div class="checkout-overlay" id="checkoutOverlay">
+  <div class="checkout-modal">
+    <button class="modal-close" onclick="closeCheckout()">✕</button>
+
+    <div class="checkout-steps">
+      <div class="step active" id="step1">1. Delivery</div>
+      <div class="step" id="step2">2. Payment</div>
+      <div class="step" id="step3">3. Confirm</div>
+    </div>
+
+    <!-- Step 1: Delivery -->
+    <div class="checkout-panel active" id="panel1">
+      <h3>Delivery Details</h3>
+      <div id="wholesaleOrderFields" style="display:none">
+        <div class="wholesale-order-notice">
+          <span>🏭 Wholesale Order</span> — Please fill your business details
+        </div>
+        <div class="form-grid">
+          <input type="text" placeholder="Business / Shop Name *" id="cBusiness" class="full">
+          <input type="text" placeholder="GST Number (optional)" id="cGST">
+        </div>
+      </div>
+      <div class="form-grid">
+        <input type="text" placeholder="Full Name *" id="cName" autocomplete="name">
+        <input type="tel" placeholder="Mobile Number *" id="cPhone" maxlength="10" autocomplete="tel">
+        <input type="email" placeholder="Email Address *" id="cEmail" autocomplete="email">
+        <input type="text" placeholder="Address Line 1 *" id="cAddr1" class="full" autocomplete="address-line1">
+        <input type="text" placeholder="City *" id="cCity" autocomplete="address-level2">
+        <input type="text" placeholder="State *" id="cState" autocomplete="address-level1">
+        <input type="text" placeholder="PIN Code *" id="cPin" maxlength="6" autocomplete="postal-code">
+      </div>
+      <button class="btn-primary" onclick="goToPayment()" id="continueToPayBtn">Continue to Payment →</button>
+    </div>
+
+    <!-- Step 2: Payment -->
+    <div class="checkout-panel" id="panel2">
+      <h3>Choose Payment Method</h3>
+      <div class="payment-methods">
+        <div class="pay-method active" onclick="selectPayment('upi')" id="payUpi">
+          <div class="pay-icon">📱</div>
+          <div><strong>UPI</strong><p>PhonePe, GPay, Paytm, BHIM</p></div>
+        </div>
+        <div class="pay-method" onclick="selectPayment('card')" id="payCard">
+          <div class="pay-icon">💳</div>
+          <div><strong>Credit / Debit Card</strong><p>Safe & Secure processing</p></div>
+        </div>
+        <div class="pay-method" onclick="selectPayment('netbanking')" id="payNetbanking">
+          <div class="pay-icon">🏦</div>
+          <div><strong>Net Banking</strong><p>All major Indian banks</p></div>
+        </div>
+      </div>
+
+      <div id="upiPanel" class="pay-panel">
+        <label>Enter UPI ID (for verification)</label>
+        <input type="text" placeholder="yourname@upi" id="upiId" autocomplete="off">
+        <small>Razorpay will open the secure payment window after confirmation.</small>
+      </div>
+      <div class="checkout-policy-notice">
+        <div class="cpn-icon">⚠️</div>
+        <div class="cpn-text">
+          <strong>Cancellation & Return Policy</strong>
+          <p>Orders can only be cancelled <strong>before dispatch</strong>. Once your order is dispatched, returns or cancellations are not acceptable.</p>
+        </div>
+      </div>
+      <div id="cardPanel" class="pay-panel" style="display:none">
+        <div class="card-security-notice">🔒 Secure payment window will open. Supports Visa, Mastercard, RuPay & more.</div>
+      </div>
+      <div id="netPanel" class="pay-panel" style="display:none">
+        <div class="card-security-notice">🏦 Securely pay via HDFC, SBI, ICICI and 50+ other banks.</div>
+      </div>
+
+      <div class="checkout-order-summary" id="checkoutSummary"></div>
+      <div class="checkout-buttons">
+        <button class="btn-ghost" onclick="goToDelivery()">← Back</button>
+        <button class="btn-primary" onclick="confirmOrder()" id="confirmOrderBtn">Confirm Order →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Confirmation -->
+    <div class="checkout-panel" id="panel3">
+      <div class="order-success">
+        <div class="success-icon">✅</div>
+        <h2>Order Placed!</h2>
+        <p id="orderIdText"></p>
+        <p>You'll receive a confirmation SMS &amp; email shortly.</p>
+        <div class="success-details" id="successDetails"></div>
+        <button class="btn-primary" onclick="closeCheckout()" id="continueShoppingBtn">Continue Shopping</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ===================== POLICY MODAL ===================== -->
+<div class="modal-overlay" id="policyModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closePolicy()">✕</button>
+    <div class="policy-header">
+      <h2 class="policy-title" id="policyTitle">Policy Title</h2>
+    </div>
+    <div class="policy-body" id="policyContent">
+      <!-- Content injected by JS -->
+    </div>
+    <div style="margin-top:30px; text-align:right">
+      <button class="btn-primary" onclick="closePolicy()">I Understand</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SCRIPTS ===================== -->
+<script src="config.js"></script>
+<!-- ===================== FLOATING ACTIONS ===================== -->
+<div class="floating-actions">
+  <button class="floating-btn fab-cart" onclick="openCart()" id="floatingCartBtn">
+    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+    <span class="fab-badge" id="floatingCartCount">0</span>
+  </button>
+  <a href="https://wa.me/917904042547" class="whatsapp-fab" target="_blank" title="Chat with support">
+    <img src="images/whatsapp-icon.png" alt="WhatsApp Support" style="width:100%; height:100%; border-radius:50%">
+  </a>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="products.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
