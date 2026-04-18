@@ -368,26 +368,36 @@
             <li><a href="#" onclick="showSizeGuide(); return false;">Size Guide</a></li>
           </ul>
         </div>
-        <div>
+        <div class="footer-col">
           <h4>Contact Us</h4>
-          <p id="footerContactInfo" class="footer-contact">
-            📧 <span id="footerEmail">info@nationalfootwear.in</span><br>
-            📞 <span id="footerPhone">+91 79040 42547</span><br>
-            📍 <span id="footerAddress">5/3, Harijan Colony, UTHAMAPLAYAM, THENI - 625533</span>
-          </p>
-          <div style="margin-top:15px">
-            <input type="email" id="newsletterEmail" placeholder="Your Email"
-              style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.05); color:white; font-size:12px; margin-bottom:8px">
-            <button class="btn-primary full-width" style="padding:8px; font-size:12px"
-              onclick="subscribeNewsletter()">Subscribe</button>
+          <div class="footer-contact-list">
+            <div class="footer-contact-item">
+              <span>📧</span> <span id="footerEmail">info@nationalfootwear.in</span>
+            </div>
+            <div class="footer-contact-item">
+              <span>📞</span> <span id="footerPhone">+91 79040 42547</span>
+            </div>
+            <div class="footer-contact-item">
+              <span>📍</span> <span id="footerAddress">5/3, Harijan Colony, UTHAMAPLAYAM, THENI - 625533</span>
+            </div>
+          </div>
+          <div class="newsletter-form" style="margin-top:20px">
+            <input type="email" id="newsletterEmail" placeholder="Your Email">
+            <button class="btn-primary full-width" onclick="subscribeNewsletter()" style="padding:10px; margin-top:8px">Subscribe</button>
           </div>
         </div>
       </div>
       <div class="footer-bottom">
-        <div class="copyright-area" id="footerCopyright">© 2026 National Agencies</div>
-        <div class="credit-area">Designed and Developed by <a href="#" class="dev-credit">Techway-Solution</a></div>
-        <div class="payment-icons">
-          <span>UPI</span><span>Visa</span><span>MC</span><span>RuPay</span><span>NetBanking</span>
+        <div class="footer-bottom-inner">
+          <div class="copyright-area" id="footerCopyright">© 2026 National Agencies</div>
+          <div class="credit-area">Designed and Developed by <a href="#" class="dev-credit">Techway-Solution</a></div>
+          <div class="payment-methods">
+            <span class="pay-badge">UPI</span>
+            <span class="pay-badge">Visa</span>
+            <span class="pay-badge">MC</span>
+            <span class="pay-badge">RuPay</span>
+            <span class="pay-badge">NetBanking</span>
+          </div>
         </div>
       </div>
     </div>

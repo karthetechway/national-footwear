@@ -29,13 +29,18 @@
 
 /* ===== RESET ===== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html, body { 
+  overflow-x: hidden !important; 
+  max-width: 100% !important; 
+  width: 100%; 
+  position: relative; 
+  -webkit-overflow-scrolling: touch;
+}
 body {
   font-family: var(--font-body);
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
-  overflow-x: hidden;
 }
 img { max-width: 100%; display: block; }
 a { text-decoration: none; color: inherit; }
@@ -1269,7 +1274,7 @@ input, select { font-family: var(--font-body); }
   .header-right { flex-shrink: 0; }
   .header-actions { gap: 10px; }
   
-  /* Strategic: Hide non-essentials from header, move to mobile menu */
+  /* Restore: Hide non-essentials from header, move to mobile menu */
   .header-actions .btn-icon[title="Account"],
   .header-actions .btn-icon[title="Wishlist"] { display: none; }
 
@@ -1281,23 +1286,38 @@ input, select { font-family: var(--font-body); }
   .mobile-nav { display: none; flex-direction: column; top: 0; height: 100vh; right: -100%; width: 85%; z-index: 3000; padding: 25px; }
   .mobile-nav.open { display: flex; right: 0; }
   
-  .hero { padding: 40px 20px; text-align: center; overflow: hidden; width: 100%; }
+  .hero { padding: 40px 20px; text-align: center; overflow: hidden; width: 100% !important; max-width: 100% !important; }
   .hero-title { font-size: 1.8rem; line-height: 1.2; }
-  .category-grid { grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 15px; }
+  .category-grid { grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 15px; width: 100%; }
   .cat-card { height: 180px; }
   
-  /* 1-Column Precision Fit */
+  /* Precision Grid Fix */
   .products-grid { 
     grid-template-columns: 1fr !important; 
     gap: 20px !important; 
     padding: 0 15px !important;
     width: 100% !important;
+    margin: 0 !important;
   }
   .product-card { width: 100% !important; margin: 0 auto !important; max-width: 100%; }
-  .product-img-wrap img { height: auto; max-height: 280px; }
   
-  .offer-cards { grid-template-columns: 1fr; gap: 15px; padding: 0 20px; }
-  .offer-card { padding: 24px; text-align: center; }
+  /* Brands Track Lockdown (Slide Killer) */
+  .brands-track-wrap { overflow: hidden !important; width: 100% !important; position: relative; }
+  .brands-track { width: max-content; }
+  
+  /* Footer 10x UI Center Alignment */
+  .footer { padding: 60px 0 30px; text-align: center; width: 100%; overflow: hidden; }
+  .footer-grid { grid-template-columns: 1fr !important; gap: 40px !important; width: 100%; }
+  .footer-col { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
+  .footer-brand { align-items: center; text-align: center; }
+  .footer-social { justify-content: center; }
+  .footer-contact-list { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; padding: 0; }
+  .footer-contact-item { display: flex; align-items: center; gap: 10px; justify-content: center; width: 100%; }
+  .newsletter-form { width: 100%; max-width: 320px; margin: 0 auto; display: flex; flex-direction: column; }
+  
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.05); padding-top: 30px; margin-top: 30px; }
+  .footer-bottom-inner { display: flex; flex-direction: column; gap: 20px; align-items: center; text-align: center; }
+  .payment-methods { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
   
   .floating-actions { bottom: 20px; right: 20px; gap: 12px; }
   .whatsapp-fab, .fab-cart { width: 55px; height: 55px; }
@@ -1306,5 +1326,5 @@ input, select { font-family: var(--font-body); }
 @media (max-width: 480px) {
   .logo-premium { font-size: 1.1rem; }
   .hero-title { font-size: 1.6rem; }
-  .container { padding: 0 15px; }
+  .container { padding: 0 15px; width: 100% !important; max-width: 100% !important; }
 }
