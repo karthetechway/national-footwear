@@ -12,8 +12,7 @@ function sanitize(str) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
-    .replace(/\//g, '&#47;');
+    .replace(/'/g, '&#39;');
 }
 function safeText(id, val) {
   const el = document.getElementById(id);
@@ -312,8 +311,8 @@ function renderProductsTable(filter = '') {
         </td>
         <td>
           <div class="td-actions">
-            <button class="btn-edit" onclick="openEditProductModal('${sId}')" title="Edit">✏️</button>
-            <button class="btn-delete" onclick="handleDeleteProduct('${sId}')" title="Delete">🗑️</button>
+            <button class="btn-edit" onclick="editProduct('${sId}')" title="Edit">✏️</button>
+            <button class="btn-delete" onclick="deleteProduct('${sId}')" title="Delete">🗑️</button>
           </div>
         </td>
       </tr>
