@@ -138,10 +138,13 @@ function setupHeader() {
   hamburger.addEventListener('click', () => {
     const nav = document.getElementById('mobileNav');
     nav.classList.toggle('open');
+    // Premium: Lock body scroll when menu is open
+    document.body.classList.toggle('no-scroll', nav.classList.contains('open'));
   });
 }
 function closeMobileNav() {
   document.getElementById('mobileNav').classList.remove('open');
+  document.body.classList.remove('no-scroll');
 }
 
 // ===== BRAND BANNER =====
