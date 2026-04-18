@@ -4,7 +4,6 @@
 // ============================================================
 
 // ===== SECURITY: HTML SANITIZER =====
-// ===== SECURITY: HTML SANITIZER =====
 function sanitize(str) {
   if (typeof str !== 'string' && typeof str !== 'number') return '';
   return String(str)
@@ -13,6 +12,19 @@ function sanitize(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+}
+
+// ===== CLOUD IMAGE RESOLVER =====
+function resolveImagePath(path) {
+  if (!path) return '';
+  // If it's already a full URL (Firebase/Cloud), return as is
+  if (path.startsWith('http')) return path;
+  
+  // Convert local 'images/...' to Firebase Storage URL
+  // Format: https://firebasestorage.googleapis.com/v0/b/[BUCKET]/o/[PATH]?alt=media
+  const bucket = FIREBASE_CONFIG.storageBucket;
+  const encodedPath = encodeURIComponent(path);
+  return `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${encodedPath}?alt=media`;
 }
 
 function escapeJS(str) {
@@ -132,7 +144,7 @@ function renderBrandBanner() {
   const allBrands = [...FEATURED_BRANDS, ...FEATURED_BRANDS];
   track.innerHTML = allBrands.map(b => `
     <div class="brand-logo-card" onclick="filterByBrand('${sanitize(b.name)}')" title="Shop ${sanitize(b.name)}">
-      <img src="${sanitize(b.logo)}" alt="${sanitize(b.name)}" class="brand-logo-img">
+      <img src="${resolveImagePath(b.logo)}" alt="${sanitize(b.name)}" class="brand-logo-img">
     </div>
   `).join('');
 }
@@ -214,7 +226,7 @@ function renderProducts(products) {
     return `
     <div class="product-card" onclick="openProductModal('${sanitize(p.id)}')">
       <div class="product-img-wrap">
-        <img src="${sanitize(mainImg)}" alt="${sanitize(p.name)}" loading="lazy">
+        <img src="${resolveImagePath(mainImg)}" alt="${sanitize(p.name)}" loading="lazy">
         ${badgeHtml}
         <div class="product-brand-tag">${sanitize(p.brand)}</div>
         <button class="wishlist-btn ${isWished ? 'active' : ''}"
@@ -321,7 +333,7 @@ function renderModalImages(p, colorIdx) {
       ${imgs.map((img, i) => `
         <div class="modal-thumb-item ${i === 0 ? 'active' : ''}"
           onclick="changeModalImg(${i}, this)">
-          <img src="${sanitize(img)}" alt="View ${i+1}" class="modal-thumb-img">
+          <img src="${resolveImagePath(img)}" alt="View ${i+1}" class="modal-thumb-img">
         </div>
       `).join('')}
     </div>
@@ -329,7 +341,7 @@ function renderModalImages(p, colorIdx) {
 
   document.getElementById('modalImages').innerHTML = `
     <div class="modal-img-main-wrap">
-      <img src="${sanitize(imgs[0])}" alt="${sanitize(p.name)}"
+      <img src="${resolveImagePath(imgs[0])}" alt="${sanitize(p.name)}"
         class="modal-main-img" id="mainModalImg">
     </div>
     ${thumbsHtml}
@@ -342,7 +354,7 @@ function changeModalImg(idx, el) {
   const imgs = currentProduct.colors[selectedColor].images;
   if (!imgs[idx]) return;
 
-  mainImg.src = imgs[idx]; 
+  mainImg.src = resolveImagePath(imgs[idx]); 
   
   document.querySelectorAll('.modal-thumb-item').forEach(t => t.classList.remove('active'));
   if (el) el.classList.add('active');
