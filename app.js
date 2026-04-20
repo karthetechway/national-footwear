@@ -422,10 +422,6 @@ function renderModalInfo(p) {
       <button class="btn-primary" onclick="addToCartFromModal()">🛒 Add to Cart</button>
       <button class="btn-ghost" onclick="buyNow()">Buy Now</button>
     </div>
-    <div style="margin-top:14px;font-size:13px;color:var(--text2);display:flex;gap:16px;flex-wrap:wrap">
-      <span>🚚 Free delivery above ₹${BRAND.freeDeliveryAbove}</span>
-      <span>↩️ ${BRAND.returnDays}-day returns</span>
-    </div>
   `;
 }
 function selectColor(idx) { selectedColor = idx; renderModalImages(currentProduct, idx); renderModalInfo(currentProduct); }
@@ -1040,11 +1036,11 @@ const POLICIES = {
   },
   shipping: {
     title: "Shipping Policy",
-    content: "We offer FREE delivery on all orders above ₹499. Orders are typically processed within 24-48 hours and delivered within 5-7 business days across India. Tracking details are sent via SMS and Email once dispatched."
+    content: "We offer professional door-to-door delivery across India. Orders are typically processed within 24-48 hours and delivered within 5-7 business days. Tracking details are sent via SMS and Email once dispatched."
   },
   returns: {
     title: "Returns & Exchanges",
-    content: "We have a hassle-free 30-day return policy. If you are not satisfied with your purchase or if there is a size issue, you can request a return or exchange through your account dashboard or by contacting our support team."
+    content: "We take pride in our quality and only source 100% original products. If you have any issues with size or quality, please contact our support team through your dashboard to initiate an exchange request."
   },
   terms: {
     title: "Terms of Service",
