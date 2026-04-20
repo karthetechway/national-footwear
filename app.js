@@ -118,9 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupSearch();
   setupKeyListeners();
 });
-  const cp = document.getElementById('codPanel');
-  if (cp) cp.style.display = 'none';
-});
 
 // ===== APPLY BRAND CONFIG =====
 function applyBrandConfig() {
@@ -747,28 +744,15 @@ function selectPayment(type) {
   });
   const activeEl = document.getElementById(`pay${type.charAt(0).toUpperCase() + type.slice(1)}`);
   if (activeEl) activeEl.classList.add('active');
-  document.getElementById('upiPanel').style.display = type === 'upi' ? 'block' : 'none';
-  document.getElementById('cardPanel').style.display = type === 'card' ? 'block' : 'none';
-  document.getElementById('netPanel').style.display = type === 'netbanking' ? 'block' : 'none';
   renderCheckoutSummary();
 }
 
 function confirmOrder() {
-  if (selectedPayment === 'upi') {
-    const upiVal = document.getElementById('upiId').value.trim();
-    if (!upiVal || !upiVal.includes('@')) { showToast('Please enter a valid UPI ID (e.g. name@upi)'); return; }
-  }
-  
   const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
   const shipping = total >= BRAND.freeDeliveryAbove ? 0 : 49;
-  const cod = selectedPayment === 'cod' ? 49 : 0;
-  const grandTotal = total + shipping + cod;
+  const grandTotal = total + shipping;
 
-  if (selectedPayment === 'cod') {
-    finishOrder(null);
-  } else {
-    payWithRazorpay(grandTotal);
-  }
+  payWithRazorpay(grandTotal);
 }
 
 function payWithRazorpay(amount) {
@@ -808,12 +792,15 @@ function payWithRazorpay(amount) {
 }
 
 function finishOrder(paymentId) {
+  if (!paymentId) {
+    showToast('Payment verification failed. Please try again.');
+    return;
+  }
   const prefix = isWholesaleMode ? 'NF-WS' : 'NF-RT';
   orderNumber = `${prefix}-${Date.now().toString().slice(-8)}`;
   const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
   const shipping = total >= BRAND.freeDeliveryAbove ? 0 : 49;
-  const cod = selectedPayment === 'cod' ? 49 : 0;
-  const grandTotal = total + shipping + cod;
+  const grandTotal = total + shipping;
 
   const orderData = {
     orderId: orderNumber,
@@ -831,8 +818,7 @@ function finishOrder(paymentId) {
       size: i.size, color: i.colorName, qty: i.qty,
       price: i.price, total: i.price * i.qty
     })),
-    payment: selectedPayment,
-    paymentId: paymentId || 'COD',
+    paymentId: paymentId,
     grandTotal,
     status: 'confirmed',
     placedAt: new Date().toISOString()
@@ -903,9 +889,28 @@ function toggleUserAccount() {
   }
 }
 
-function openAuthModal() {
+function openAuthModal(type = 'retail') {
   document.getElementById('authModal').classList.add('open');
   document.body.style.overflow = 'hidden';
+  
+  // Set default type
+  const typeSelect = document.getElementById('regType');
+  if (typeSelect) {
+    typeSelect.value = type;
+    toggleRegFields();
+  }
+}
+
+function openRetailAuth() {
+  if (currentUser) { openAccount(); return; }
+  openAuthModal('retail');
+  switchAuthTab('login');
+}
+
+function openWholesaleAuth() {
+  if (currentUser) { openAccount(); return; }
+  openAuthModal('wholesale');
+  switchAuthTab('register'); // For wholesale, we encourage registration
 }
 
 function closeAuthModal() {
@@ -1068,8 +1073,12 @@ function renderOrderHistory() {
   });
 }
 
+function activateWholesaleUI() {
+  showToast('🏭 Wholesale Prices Active');
+}
+
 // Placeholder to satisfy existing references
-function openWholesaleModal() { toggleUserAccount(); }
+function openWholesaleModal() { openWholesaleAuth(); }
 function closeWholesaleModal() { closeAuthModal(); }
 function submitWholesaleLogin() { handleSignIn(); }
 

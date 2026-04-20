@@ -139,7 +139,7 @@
       <p class="hero-sub">National Agencies curates the world's most trusted footwear brands. Experience the perfect blend of style, durability, and unmatched comfort in every step—since 1995.</p>
         <div class="hero-actions">
           <button class="btn-primary" onclick="scrollToSection('products')">Explore Collection</button>
-          <button class="btn-ghost" onclick="openWholesaleModal()">Wholesale Access</button>
+          <button class="btn-ghost" onclick="openWholesaleAuth()">Wholesale Access</button>
         </div>
     </div>
     <div class="hero-visual">
@@ -325,11 +325,9 @@
           <h4>Quick Links</h4>
           <ul>
             <li><a href="#" onclick="showPolicy('about'); return false;">Brand Story</a></li>
+            <li><a href="#" onclick="openRetailAuth(); return false;">My Account</a></li>
+            <li><a href="#" onclick="openWholesaleAuth(); return false;">Wholesale Login</a></li>
             <li><a href="admin.html" style="color:var(--accent); font-weight:700;">Store Administration</a></li>
-            <li><a href="#" onclick="scrollToSection('brands'); return false;">Our Brands</a></li>
-            <li><a href="#" onclick="scrollToSection('products'); return false;">All Products</a></li>
-            <li><a href="#" onclick="scrollToSection('offers'); return false;">Special Offers</a></li>
-            <li><a href="#" onclick="openWholesaleModal(); return false;">Wholesale Inquiry</a></li>
           </ul>
         </div>
         <div>
@@ -502,24 +500,10 @@
           </div>
         </div>
 
-        <div id="upiPanel" class="pay-panel">
-          <label>Enter UPI ID (for verification)</label>
-          <input type="text" placeholder="yourname@upi" id="upiId" autocomplete="off">
-          <small>Razorpay will open the secure payment window after confirmation.</small>
-        </div>
-
-        <div id="cardPanel" class="pay-panel" style="display:none">
-          <div class="card-security-notice">🔒 Secure payment window will open. Supports Visa, Mastercard, RuPay & more.
-          </div>
-        </div>
-        <div id="netPanel" class="pay-panel" style="display:none">
-          <div class="card-security-notice">🏦 Securely pay via HDFC, SBI, ICICI and 50+ other banks.</div>
-        </div>
-
         <div class="checkout-order-summary" id="checkoutSummary"></div>
         <div class="checkout-buttons">
           <button class="btn-ghost" onclick="goToDelivery()">← Back</button>
-          <button class="btn-primary" onclick="confirmOrder()" id="confirmOrderBtn">Confirm Order →</button>
+          <button class="btn-primary" onclick="confirmOrder()" id="confirmOrderBtn">Proceed to Secure Payment →</button>
         </div>
       </div>
 
