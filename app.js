@@ -920,18 +920,27 @@ document.getElementById('wholesalePasswordInput').addEventListener('keydown', e 
 function activateWholesaleUI() {
   const bar = document.getElementById('wholesaleTopBar');
   if (bar) bar.style.display = 'block';
-  const hint = document.getElementById('wholesaleModeHint');
-  if (hint) hint.style.display = 'block';
-  safeSetText('wholesaleNavLabel', '🏭 Active');
+  
+  // Add B2B indicator to header if not already present
+  const headerRight = document.querySelector('.header-actions');
+  if (headerRight && !document.querySelector('.wholesale-indicator')) {
+    const indicator = document.createElement('div');
+    indicator.className = 'wholesale-indicator';
+    indicator.innerHTML = 'Wholesale Mode Active';
+    headerRight.prepend(indicator);
+  }
+  
+  showToast('🏭 Wholesale B2B Mode Enabled');
 }
 function exitWholesale() {
   sessionStorage.removeItem('nf_wholesale');
   isWholesaleMode = false;
   const bar = document.getElementById('wholesaleTopBar');
   if (bar) bar.style.display = 'none';
-  const hint = document.getElementById('wholesaleModeHint');
-  if (hint) hint.style.display = 'none';
-  safeSetText('wholesaleNavLabel', 'Wholesale');
+  
+  const indicator = document.querySelector('.wholesale-indicator');
+  if (indicator) indicator.remove();
+  
   cart = [];
   saveCart();
   updateCartUI();
