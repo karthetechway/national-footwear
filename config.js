@@ -15,7 +15,7 @@ const BRAND = {
   upi: "nationalfootwear@ybl",
   whatsapp: "917904042547",
   founded: "1995",
-  freeDeliveryAbove: 499,
+  freeDeliveryAbove: 99999,
   deliveryDays: 5,
   returnDays: 30,
 

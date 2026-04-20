@@ -419,7 +419,7 @@ function renderModalInfo(p) {
     ${wholesaleRow}
     <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">${features}</div>
     <div class="modal-section">
-      <h4>Colour — <span style="color:var(--primary);font-weight:700">${sanitize(p.colors[selectedColor].name)}</span></h4>
+      <h4>Colour — <span style="color:var(--accent);font-weight:700">${sanitize(p.colors[selectedColor].name)}</span></h4>
       <div class="color-swatches">${colorSwatches}</div>
     </div>
     <div class="modal-section">
@@ -893,11 +893,18 @@ function openAuthModal(type = 'retail') {
   document.getElementById('authModal').classList.add('open');
   document.body.style.overflow = 'hidden';
   
-  // Set default type
-  const typeSelect = document.getElementById('regType');
-  if (typeSelect) {
-    typeSelect.value = type;
-    toggleRegFields();
+  // Set default type and hide/show fields
+  const typeInput = document.getElementById('regType');
+  if (typeInput) {
+    typeInput.value = type;
+    const isWholesale = type === 'wholesale';
+    document.getElementById('wholesaleFields').style.display = isWholesale ? 'block' : 'none';
+    
+    // Update Tab UI if needed
+    const tabReg = document.getElementById('tabRegister');
+    if (tabReg) {
+      tabReg.textContent = isWholesale ? 'Wholesale Registration' : 'Create Account';
+    }
   }
 }
 
@@ -928,7 +935,8 @@ function switchAuthTab(tab) {
 }
 
 function toggleRegFields() {
-  const isWholesale = document.getElementById('regType').value === 'wholesale';
+  const typeVal = document.getElementById('regType').value;
+  const isWholesale = typeVal === 'wholesale';
   document.getElementById('wholesaleFields').style.display = isWholesale ? 'block' : 'none';
 }
 
