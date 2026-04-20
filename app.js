@@ -78,11 +78,32 @@ function getActiveProducts() {
   } catch { return [...PRODUCTS_DB]; }
 }
 
+// ===== FIREBASE INITIALIZATION =====
+firebase.initializeApp(FIREBASE_CONFIG);
+const auth = firebase.auth();
+const db = firebase.database();
+
+let currentUser = null;
+
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', () => {
   cart = loadFromStorage('nf_cart', []);
   wishlist = loadFromStorage('nf_wishlist', []);
-  isWholesaleMode = sessionStorage.getItem('nf_wholesale') === 'true';
+  
+  // Auth state observer
+  auth.onAuthStateChanged(user => {
+    currentUser = user;
+    if (user) {
+      updateUserUI(user);
+      fetchUserRole(user.uid);
+      document.getElementById('userStatusDot').classList.add('online');
+    } else {
+      updateUserUI(null);
+      isWholesaleMode = false;
+      document.getElementById('userStatusDot').classList.remove('online');
+      applyFiltersAndSort();
+    }
+  });
 
   const products = getActiveProducts();
   applyBrandConfig();
@@ -96,8 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupCardNumberFormatter();
   setupSearch();
   setupKeyListeners();
-
-  if (isWholesaleMode) activateWholesaleUI();
+});
   const cp = document.getElementById('codPanel');
   if (cp) cp.style.display = 'none';
 });
@@ -793,8 +813,8 @@ function finishOrder(paymentId) {
   const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
   const shipping = total >= BRAND.freeDeliveryAbove ? 0 : 49;
   const cod = selectedPayment === 'cod' ? 49 : 0;
+  const grandTotal = total + shipping + cod;
 
-  // Build order record
   const orderData = {
     orderId: orderNumber,
     type: isWholesaleMode ? 'wholesale' : 'retail',
@@ -804,10 +824,7 @@ function finishOrder(paymentId) {
       email: document.getElementById('cEmail').value.trim(),
       address: sanitize(document.getElementById('cAddr1').value.trim()),
       city: sanitize(document.getElementById('cCity').value.trim()),
-      state: sanitize(document.getElementById('cState').value.trim()),
-      pin: document.getElementById('cPin').value.trim(),
-      business: isWholesaleMode ? sanitize(document.getElementById('cBusiness')?.value?.trim() || '') : '',
-      gst: isWholesaleMode ? sanitize(document.getElementById('cGST')?.value?.trim() || '') : ''
+      pin: document.getElementById('cPin').value.trim()
     },
     items: cart.map(i => ({
       sku: i.sku, name: i.name, brand: i.brand,
@@ -816,40 +833,33 @@ function finishOrder(paymentId) {
     })),
     payment: selectedPayment,
     paymentId: paymentId || 'COD',
-    subtotal: total,
-    shipping, cod,
-    grandTotal: total + shipping + cod,
-    status: paymentId ? 'confirmed' : 'pending',
+    grandTotal,
+    status: 'confirmed',
     placedAt: new Date().toISOString()
   };
 
-  // Save to localStorage (in production, send to Firebase)
+  // Save to Firebase if user is logged in
+  if (currentUser) {
+    db.ref(`users/${currentUser.uid}/orders`).push(orderData)
+      .then(() => console.log('Order saved to Firebase'))
+      .catch(err => console.error('Firebase save error:', err));
+  }
+
+  // Fallback: Save to localStorage
   const orders = loadFromStorage('nf_orders', []);
   orders.unshift(orderData);
   saveToStorage('nf_orders', orders);
 
-  const grandTotal = total + shipping + cod;
-
   document.getElementById('orderIdText').textContent = `Order ID: ${orderNumber}`;
   document.getElementById('successDetails').innerHTML = `
     <div class="success-billing-card">
-      <div class="sbc-header">
-        <span class="sbc-icon">📦</span>
-        <strong>${cart.length} item(s) ordered</strong>
-      </div>
+      <div class="sbc-header"><strong>${cart.length} item(s) ordered</strong></div>
       <div class="sbc-body">
-        <p>💰 Total Payable: <strong>₹${grandTotal.toLocaleString()}</strong></p>
-        <p>🚚 Expected Delivery: <strong>${getDeliveryDate()}</strong></p>
-        <p>💳 Payment Mode: <strong>${selectedPayment.toUpperCase()}</strong></p>
-        ${paymentId ? `<p>🔗 Transaction ID: <code style="font-size:12px">${paymentId}</code></p>` : ''}
+        <p>💰 Total: <strong>₹${grandTotal.toLocaleString()}</strong></p>
+        <p>🚚 Delivery: <strong>${getDeliveryDate()}</strong></p>
+        <p>💳 Mode: <strong>${selectedPayment.toUpperCase()}</strong></p>
       </div>
-      <div class="sbc-action">
-        <button class="btn-whatsapp-order" onclick="openWhatsAppBill('${orderNumber}')">
-          <svg viewBox="0 0 24 24" fill="white" width="20" height="20"><path d="M17.472 6.527C15.825 4.88 13.635 3.97 11.317 3.97c-4.468 0-8.103 3.635-8.103 8.103 0 1.428.372 2.825 1.08 4.053L2.27 21.03l4.982-1.307c1.17.638 2.49 1.004 3.856 1.004h.01c4.467 0 8.102-3.635 8.102-8.102 0-2.318-.91-4.508-2.557-6.155zM11.317 19.34c-1.284 0-2.544-.345-3.642-.996l-.261-.157-2.705.71.722-2.637-.17-.266c-.713-1.116-1.09-2.408-1.09-3.725 0-3.79 3.08-6.87 6.87-6.87 1.836 0 3.563.715 4.858 2.012 1.295 1.295 2.01 3.022 2.01 4.858 0 3.79-3.08 6.87-6.87 6.87z"/></svg>
-          Finalize via WhatsApp
-        </button>
-        <p class="sbc-hint">Click above to send order details to the shop owner.</p>
-      </div>
+      <button class="btn-whatsapp-order" onclick="openWhatsAppBill('${orderNumber}')">Finalize via WhatsApp</button>
     </div>
   `;
   setStep(3);
@@ -884,58 +894,184 @@ function getDeliveryDate() {
   return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
-// ===== WHOLESALE =====
-function openWholesaleModal() {
-  if (isWholesaleMode) {
-    if (confirm('You are already in Wholesale Mode. Would you like to exit?')) {
-      exitWholesale();
-    }
-    return;
+// ===== AUTHENTICATION =====
+function toggleUserAccount() {
+  if (currentUser) {
+    openAccount();
+  } else {
+    openAuthModal();
   }
-  document.getElementById('wholesaleModal').classList.add('open');
+}
+
+function openAuthModal() {
+  document.getElementById('authModal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
-function closeWholesaleModal() {
-  document.getElementById('wholesaleModal').classList.remove('open');
+
+function closeAuthModal() {
+  document.getElementById('authModal').classList.remove('open');
   document.body.style.overflow = '';
-  document.getElementById('wholesalePasswordInput').value = '';
-  document.getElementById('wholesaleError').style.display = 'none';
 }
-function submitWholesaleLogin() {
-  const email = document.getElementById('wholesaleEmailInput').value.trim();
-  const password = document.getElementById('wholesalePasswordInput').value.trim();
-  
-  // For static demo, we check against the central wholesale password
-  // In a real production environment, this would hit a Firebase Auth endpoint
-  if (password === BRAND.wholesale.password && email.length > 5) {
-    sessionStorage.setItem('nf_wholesale', 'true');
-    isWholesaleMode = true;
-    closeWholesaleModal();
-    activateWholesaleUI();
-    applyFiltersAndSort();
+
+function switchAuthTab(tab) {
+  const isLogin = tab === 'login';
+  document.getElementById('tabLogin').classList.toggle('active', isLogin);
+  document.getElementById('tabRegister').classList.toggle('active', !isLogin);
+  document.getElementById('loginForm').style.display = isLogin ? 'block' : 'none';
+  document.getElementById('registerForm').style.display = isLogin ? 'none' : 'block';
+  document.getElementById('authError').style.display = 'none';
+}
+
+function toggleRegFields() {
+  const isWholesale = document.getElementById('regType').value === 'wholesale';
+  document.getElementById('wholesaleFields').style.display = isWholesale ? 'block' : 'none';
+}
+
+function handleSignUp() {
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pass = document.getElementById('regPassword').value.trim();
+  const type = document.getElementById('regType').value;
+  const shop = document.getElementById('regShop').value.trim();
+  const gst = document.getElementById('regGST').value.trim();
+
+  if (!name || !email || pass.length < 6) {
+    showAuthError('Please fill all fields. Password must be at least 6 characters.');
+    return;
+  }
+
+  auth.createUserWithEmailAndPassword(email, pass)
+    .then(cred => {
+      return db.ref(`users/${cred.user.uid}/profile`).set({
+        name, email, type, shop, gst, createdAt: new Date().toISOString()
+      });
+    })
+    .then(() => {
+      showToast('Account created successfully! 🎉');
+      closeAuthModal();
+    })
+    .catch(err => showAuthError(err.message));
+}
+
+function handleSignIn() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPassword').value.trim();
+
+  if (!email || !pass) {
+    showAuthError('Please enter both email and password.');
+    return;
+  }
+
+  auth.signInWithEmailAndPassword(email, pass)
+    .then(() => {
+      showToast('Welcome back! 👋');
+      closeAuthModal();
+    })
+    .catch(err => showAuthError(err.message));
+}
+
+function handleSignOut() {
+  auth.signOut().then(() => {
+    showToast('Signed out successfully');
+    closeAccount();
+  });
+}
+
+function showAuthError(msg) {
+  const el = document.getElementById('authError');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function updateUserUI(user) {
+  const dot = document.getElementById('userStatusDot');
+  if (user) {
+    dot.classList.add('online');
+    db.ref(`users/${user.uid}/profile`).once('value', snap => {
+      const p = snap.val() || {};
+      document.getElementById('userNameDisplay').textContent = p.name || user.email.split('@')[0];
+      document.getElementById('userTypeDisplay').textContent = p.type === 'wholesale' ? '🏭 Wholesale Partner' : '👤 Retail Customer';
+      document.getElementById('userAvatar').textContent = (p.name || user.email)[0].toUpperCase();
+    });
   } else {
-    const err = document.getElementById('wholesaleError');
-    if (err) err.style.display = 'block';
-    document.getElementById('wholesalePasswordInput').value = '';
+    dot.classList.remove('online');
+    document.getElementById('userNameDisplay').textContent = 'Guest User';
+    document.getElementById('userTypeDisplay').textContent = 'Retail Mode';
+    document.getElementById('userAvatar').textContent = 'G';
   }
 }
-document.getElementById('wholesalePasswordInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') submitWholesaleLogin();
-});
-function activateWholesaleUI() {
-  // Silent activation: No banners or indicators as requested
-  showToast('🏭 Wholesale Prices Unlocked');
+
+function fetchUserRole(uid) {
+  db.ref(`users/${uid}/profile/type`).once('value', snap => {
+    isWholesaleMode = snap.val() === 'wholesale';
+    if (isWholesaleMode) activateWholesaleUI();
+    applyFiltersAndSort();
+  });
 }
-function exitWholesale() {
-  sessionStorage.removeItem('nf_wholesale');
-  isWholesaleMode = false;
-  
-  cart = [];
-  saveCart();
-  updateCartUI();
-  applyFiltersAndSort();
-  showToast('Exited wholesale mode');
+
+function openAccount() {
+  document.getElementById('accountSidebar').classList.add('open');
+  document.getElementById('accountOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
+
+function closeAccount() {
+  document.getElementById('accountSidebar').classList.remove('open');
+  document.getElementById('accountOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ===== ORDER HISTORY =====
+function openOrderHistory() {
+  closeAccount();
+  document.getElementById('historyModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  renderOrderHistory();
+}
+
+function closeHistory() {
+  document.getElementById('historyModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function renderOrderHistory() {
+  const el = document.getElementById('orderHistoryContent');
+  if (!currentUser) {
+    el.innerHTML = '<p style="text-align:center;padding:40px">Please sign in to view your orders.</p>';
+    return;
+  }
+
+  db.ref(`users/${currentUser.uid}/orders`).once('value', snap => {
+    const orders = [];
+    snap.forEach(child => { orders.unshift(child.val()); });
+
+    if (orders.length === 0) {
+      el.innerHTML = '<p style="text-align:center;padding:40px">You haven\'t placed any orders yet.</p>';
+      return;
+    }
+
+    el.innerHTML = `<div class="order-history-list">` + orders.map(o => `
+      <div class="history-card">
+        <div class="history-header">
+          <span class="history-id">${o.orderId}</span>
+          <span class="history-status status-${o.status}">${o.status}</span>
+        </div>
+        <div class="history-items">
+          ${o.items.map(i => `• ${i.brand} ${i.name} (Size ${i.size}) x${i.qty}`).join('<br>')}
+        </div>
+        <div class="history-footer">
+          <span class="history-date">${new Date(o.placedAt).toLocaleDateString()}</span>
+          <span class="history-total">₹${o.grandTotal.toLocaleString()}</span>
+        </div>
+      </div>
+    `).join('') + `</div>`;
+  });
+}
+
+// Placeholder to satisfy existing references
+function openWholesaleModal() { toggleUserAccount(); }
+function closeWholesaleModal() { closeAuthModal(); }
+function submitWholesaleLogin() { handleSignIn(); }
 
 // ===== SEARCH =====
 function setupSearch() {
