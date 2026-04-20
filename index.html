@@ -32,11 +32,17 @@
         <h2>Wholesale Login</h2>
         <p>Enter your wholesale access password to unlock bulk pricing and MOQ details.</p>
         <div class="wholesale-form">
-          <input type="password" id="wholesalePasswordInput" placeholder="Enter wholesale password" autocomplete="off">
-          <div id="wholesaleError" class="wholesale-error" style="display:none">Incorrect password. Please try again.
+          <div class="form-group">
+            <label for="wholesaleEmailInput">Business Email</label>
+            <input type="email" id="wholesaleEmailInput" placeholder="e.g. partner@business.com" autocomplete="email">
           </div>
-          <button class="btn-primary" onclick="submitWholesaleLogin()" id="wholesaleLoginBtn">Access Wholesale
-            Prices</button>
+          <div class="form-group">
+            <label for="wholesalePasswordInput">Password</label>
+            <input type="password" id="wholesalePasswordInput" placeholder="Enter your B2B password" autocomplete="current-password">
+          </div>
+          <div id="wholesaleError" class="auth-error" style="display:none">⚠️ Invalid business credentials. Please try again.</div>
+          <button class="btn-primary full-width" onclick="submitWholesaleLogin()">Sign In as Partner</button>
+          <p class="wholesale-help">New partner? <a href="https://wa.me/91${BRAND.whatsapp}?text=I want to apply for a wholesale account" target="_blank">Apply for access</a></p>
         </div>
         <div class="wholesale-benefits">
           <div class="wb-item"><span>📦</span><span>Bulk Pricing</span></div>

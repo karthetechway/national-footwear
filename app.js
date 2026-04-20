@@ -901,16 +901,20 @@ function closeWholesaleModal() {
   document.getElementById('wholesaleError').style.display = 'none';
 }
 function submitWholesaleLogin() {
-  const input = document.getElementById('wholesalePasswordInput').value.trim();
-  if (input === BRAND.wholesale.password) {
+  const email = document.getElementById('wholesaleEmailInput').value.trim();
+  const password = document.getElementById('wholesalePasswordInput').value.trim();
+  
+  // For static demo, we check against the central wholesale password
+  // In a real production environment, this would hit a Firebase Auth endpoint
+  if (password === BRAND.wholesale.password && email.length > 5) {
     sessionStorage.setItem('nf_wholesale', 'true');
     isWholesaleMode = true;
     closeWholesaleModal();
     activateWholesaleUI();
-    showToast('🏭 Wholesale mode activated!');
     applyFiltersAndSort();
   } else {
-    document.getElementById('wholesaleError').style.display = 'block';
+    const err = document.getElementById('wholesaleError');
+    if (err) err.style.display = 'block';
     document.getElementById('wholesalePasswordInput').value = '';
   }
 }
