@@ -98,7 +98,8 @@ document.addEventListener('DOMContentLoaded', () => {
   setupKeyListeners();
 
   if (isWholesaleMode) activateWholesaleUI();
-  document.getElementById('codPanel').style.display = 'none';
+  const cp = document.getElementById('codPanel');
+  if (cp) cp.style.display = 'none';
 });
 
 // ===== APPLY BRAND CONFIG =====
@@ -505,10 +506,9 @@ function renderWishlistItems() {
   
   el.innerHTML = items.map(p => `
     <div class="cart-item">
-      <img src="${sanitize(p.colors[0].images[0])}" class="cart-item-img" alt="${sanitize(p.name)}">
+      <img src="${resolveImagePath(p.colors[0].images[0])}" class="cart-item-img" alt="${sanitize(p.name)}">
       <div class="cart-item-info">
-        <div class="order-detail-item"><label>Phone</label><span>${sanitize(c.phone || '—')} <a href="https://wa.me/91${sanitize(c.phone)}?text=Hello ${sanitize(c.name)}, this is from National Footwear regarding your order ${sanitize(order.orderId)}" target="_blank" style="margin-left:8px;text-decoration:none">💬 WhatsApp</a></span></div>
-        <div class="order-detail-item"><label>Email</label><span>${sanitize(c.email || '—')}</span></div>tize(p.name)}</div>
+        <div class="cart-item-name">${sanitize(p.brand)} — ${sanitize(p.name)}</div>
         <div class="cart-item-footer">
           <span class="cart-item-price">₹${(isWholesaleMode ? p.wholesalePrice : p.price).toLocaleString()}</span>
           <button class="cart-item-remove" onclick="toggleWishlist(event, '${sanitize(p.id)}')">Remove</button>
@@ -886,13 +886,14 @@ function getDeliveryDate() {
 
 // ===== WHOLESALE =====
 function openWholesaleModal() {
-  if (isWholesaleMode) { exitWholesale(); return; }
-  // Bypassing passcode gate for friction-free access
-  sessionStorage.setItem('nf_wholesale', 'true');
-  isWholesaleMode = true;
-  activateWholesaleUI();
-  showToast('🏭 Wholesale mode activated!');
-  applyFiltersAndSort();
+  if (isWholesaleMode) {
+    if (confirm('You are already in Wholesale Mode. Would you like to exit?')) {
+      exitWholesale();
+    }
+    return;
+  }
+  document.getElementById('wholesaleModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
 function closeWholesaleModal() {
   document.getElementById('wholesaleModal').classList.remove('open');
@@ -932,8 +933,6 @@ function exitWholesale() {
   cart = [];
   saveCart();
   updateCartUI();
-  applyFiltersAndSort();
-}
   applyFiltersAndSort();
   showToast('Exited wholesale mode');
 }
@@ -1096,12 +1095,11 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-
- / /   = = = = =   D E M O   A U T O - R E S T O R E   = = = = = 
- w i n d o w . a d d E v e n t L i s t e n e r ( ' D O M C o n t e n t L o a d e d ' ,   ( )   = >   { 
-     i f   ( t y p e o f   r e n d e r P r o d u c t s   = = =   ' f u n c t i o n '   & &   t y p e o f   P R O D U C T S _ D B   ! = =   ' u n d e f i n e d ' )   { 
-         c o n s o l e . l o g ( ' F o r c e   r e n d e r i n g   p r o d u c t s   f o r   d e m o . . . ' ) ; 
-         r e n d e r P r o d u c t s ( P R O D U C T S _ D B ) ; 
-     } 
- } ) ;  
- 
+// Initialize products if grid is empty
+window.addEventListener('load', () => {
+  const grid = document.getElementById('productsGrid');
+  if (grid && !grid.children.length) {
+    const products = getActiveProducts();
+    renderProducts(products);
+  }
+});
