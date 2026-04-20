@@ -922,32 +922,18 @@ document.getElementById('wholesalePasswordInput').addEventListener('keydown', e 
   if (e.key === 'Enter') submitWholesaleLogin();
 });
 function activateWholesaleUI() {
-  const bar = document.getElementById('wholesaleTopBar');
-  if (bar) bar.style.display = 'block';
-  
-  // Add B2B indicator to header if not already present
-  const headerRight = document.querySelector('.header-actions');
-  if (headerRight && !document.querySelector('.wholesale-indicator')) {
-    const indicator = document.createElement('div');
-    indicator.className = 'wholesale-indicator';
-    indicator.innerHTML = 'Wholesale Mode Active';
-    headerRight.prepend(indicator);
-  }
-  
-  showToast('🏭 Wholesale B2B Mode Enabled');
+  // Silent activation: No banners or indicators as requested
+  showToast('🏭 Wholesale Prices Unlocked');
 }
 function exitWholesale() {
   sessionStorage.removeItem('nf_wholesale');
   isWholesaleMode = false;
-  const bar = document.getElementById('wholesaleTopBar');
-  if (bar) bar.style.display = 'none';
-  
-  const indicator = document.querySelector('.wholesale-indicator');
-  if (indicator) indicator.remove();
   
   cart = [];
   saveCart();
   updateCartUI();
+  applyFiltersAndSort();
+}
   applyFiltersAndSort();
   showToast('Exited wholesale mode');
 }
