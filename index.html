@@ -18,41 +18,7 @@
 
 </head>
 
-<body id="top">
-  <!-- Mesh Background Blobs -->
-  <div class="mesh-blob" style="top:-100px; left:-100px; background:rgba(201,168,76,0.2)"></div>
-  <div class="mesh-blob" style="bottom:-100px; right:-100px; background:rgba(27,58,92,0.3)"></div>
-  <div class="mesh-blob" style="top:50%; left:50%; width:800px; height:800px; background:radial-gradient(circle, rgba(27,94,32,0.1) 0%, transparent 70%);"></div>
 
-  <!-- ===================== WHOLESALE LOGIN MODAL ===================== -->
-  <div class="modal-overlay" id="wholesaleModal">
-    <div class="modal wholesale-login-modal" id="wholesaleModalContent">
-      <button class="modal-close" onclick="closeWholesaleModal()">✕</button>
-      <div class="wholesale-modal-body">
-        <div class="wholesale-modal-icon">🏭</div>
-        <h2>Wholesale Login</h2>
-        <p>Enter your wholesale access password to unlock bulk pricing and MOQ details.</p>
-        <div class="wholesale-form">
-          <div class="form-group">
-            <label for="wholesaleEmailInput">Business Email</label>
-            <input type="email" id="wholesaleEmailInput" placeholder="e.g. partner@business.com" autocomplete="email">
-          </div>
-          <div class="form-group">
-            <label for="wholesalePasswordInput">Password</label>
-            <input type="password" id="wholesalePasswordInput" placeholder="Enter your B2B password" autocomplete="current-password">
-          </div>
-          <div id="wholesaleError" class="auth-error" style="display:none">⚠️ Invalid business credentials. Please try again.</div>
-          <button class="btn-primary full-width" onclick="submitWholesaleLogin()">Sign In as Partner</button>
-          <p class="wholesale-help">New partner? <a href="https://wa.me/91${BRAND.whatsapp}?text=I want to apply for a wholesale account" target="_blank">Apply for access</a></p>
-        </div>
-        <div class="wholesale-benefits">
-          <div class="wb-item"><span>📦</span><span>Bulk Pricing</span></div>
-          <div class="wb-item"><span>🏷️</span><span>Up to 25% Off</span></div>
-          <div class="wb-item"><span>🚚</span><span>Priority Dispatch</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <header class="header sticky" id="header">
     <div class="header-inner">
@@ -612,6 +578,36 @@
       <img src="./Images/whatsapp-icon.png" alt="WhatsApp Support" style="width:100%; height:100%; border-radius:50%">
     </a>
   </div>
+
+  <!-- ===================== WHOLESALE LOGIN MODAL ===================== -->
+  <div class="modal-overlay" id="wholesaleModal">
+    <div class="modal wholesale-login-modal" id="wholesaleModalContent">
+      <button class="modal-close" onclick="closeWholesaleModal()">✕</button>
+      <div class="wholesale-modal-body">
+        <div class="wholesale-modal-icon">🏭</div>
+        <h2>Wholesale Login</h2>
+        <p>Enter your wholesale access password to unlock bulk pricing and MOQ details.</p>
+        <div class="wholesale-form">
+          <div class="form-group">
+            <label for="wholesaleEmailInput">Business Email</label>
+            <input type="email" id="wholesaleEmailInput" placeholder="e.g. partner@business.com" autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="wholesalePasswordInput">Password</label>
+            <input type="password" id="wholesalePasswordInput" placeholder="Enter your B2B password" autocomplete="current-password">
+          </div>
+          <div id="wholesaleError" class="auth-error" style="display:none">⚠️ Invalid business credentials. Please try again.</div>
+          <button class="btn-primary full-width" onclick="submitWholesaleLogin()">Sign In as Partner</button>
+          <p class="wholesale-help">New partner? <a href="https://wa.me/917904042547?text=I want to apply for a wholesale account" target="_blank">Apply for access</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mesh Background Blobs -->
+  <div class="mesh-blob" style="top:-100px; left:-100px; background:rgba(201,168,76,0.2)"></div>
+  <div class="mesh-blob" style="bottom:-100px; right:-100px; background:rgba(27,58,92,0.3)"></div>
+  <div class="mesh-blob" style="top:50%; left:50%; width:800px; height:800px; background:radial-gradient(circle, rgba(27,94,32,0.1) 0%, transparent 70%);"></div>
 
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script src="products.js"></script>

@@ -30,11 +30,12 @@
 /* ===== RESET ===== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { 
+  margin: 0 !important;
+  padding: 0 !important;
   overflow-x: hidden !important; 
   max-width: 100% !important; 
   width: 100% !important;
   position: relative; 
-  margin: 0; padding: 0;
   -webkit-overflow-scrolling: touch;
   background: #0D1B2A !important;
   color: white;
