@@ -1096,3 +1096,12 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 
+
+ / /   = = = = =   D E M O   A U T O - R E S T O R E   = = = = = 
+ w i n d o w . a d d E v e n t L i s t e n e r ( ' D O M C o n t e n t L o a d e d ' ,   ( )   = >   { 
+     i f   ( t y p e o f   r e n d e r P r o d u c t s   = = =   ' f u n c t i o n '   & &   t y p e o f   P R O D U C T S _ D B   ! = =   ' u n d e f i n e d ' )   { 
+         c o n s o l e . l o g ( ' F o r c e   r e n d e r i n g   p r o d u c t s   f o r   d e m o . . . ' ) ; 
+         r e n d e r P r o d u c t s ( P R O D U C T S _ D B ) ; 
+     } 
+ } ) ;  
+ 
