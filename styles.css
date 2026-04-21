@@ -566,7 +566,7 @@ select {
 .header-left {
   display: flex;
   align-items: center;
-  gap: 40px;
+  gap: 20px; /* Reduced from 40px to prevent overlap */
   flex: 1;
   min-width: 0;
 }
@@ -578,41 +578,140 @@ select {
   height: 100%;
 }
 
+.logo-wrapper {
+  display: flex;
+  flex-direction: column; /* Stacked under logo */
+  align-items: center;
+  justify-content: center;
+  line-height: 1.1;
+  padding: 5px 0;
+}
+
 .main-logo-img {
-  height: 60px; /* Perfectly fits the 80px header with balanced padding */
+  height: 44px; /* Balanced to allow text below */
   width: auto;
   object-fit: contain;
   transition: var(--transition);
 }
 
-.footer-logo-img {
-  height: 90px;
-  width: auto;
-  object-fit: contain;
-  margin-bottom: 15px;
-  margin-left: -20px; /* Aligns visual center to the left */
+.logo-brand-text {
+  font-size: 11px; /* Small but readable */
+  font-weight: 800;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-top: 2px;
+  white-space: nowrap; /* Single line */
 }
 
-@media (max-width: 768px) {
-  .header { height: 72px; }
-  .top-announcement-bar { margin-top: 72px; }
-  .main-logo-img {
-    height: 52px;
-  }
-}
-
-/* Authentication Logos */
-.auth-logo-img, .admin-login-logo {
-  height: 120px;
-  width: auto;
-  object-fit: contain;
+.footer-logo-wrap {
   margin-bottom: 20px;
+  margin-left: -10px;
+  justify-content: flex-start;
+}
+
+.footer-logo-img {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+}
+
+.footer-brand-text {
+  font-size: 1rem;
+}
+
+/* Admin Login Perfection */
+.login-screen {
+  background: #050B14; /* Slightly darker than header for depth */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.login-card {
+  position: relative;
+  overflow: hidden;
+  background: #0B1B32; /* Exact brand navy */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 50px 40px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  height: 90%;
+  background-image: url('https://firebasestorage.googleapis.com/v0/b/national-footwear.firebasestorage.app/o/Images%2Flogo.jpeg?alt=media');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.08; /* Very subtle watermark */
+  pointer-events: none;
+  z-index: 0;
+}
+
+.login-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.login-card h1 {
+  color: white;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.login-desc {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  margin-bottom: 30px;
+}
+
+.login-form .form-group label {
+  color: rgba(255, 255, 255, 0.9);
+  display: block;
+  text-align: left;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.login-form input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: var(--transition);
+}
+
+.login-form input:focus {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent);
+  outline: none;
 }
 
 .admin-sidebar-logo {
   height: 60px;
   width: auto;
   object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .header { height: 80px; } /* Keep height for logo + text */
+  .main-logo-img { height: 42px; }
+  .logo-brand-text { font-size: 9px; }
 }
 
 .hero-title {
@@ -3237,7 +3336,7 @@ select {
 }
 
 .auth-tab.active {
-  color: var(--primary);
+  color: white; /* Clear text on active tab */
 }
 
 .auth-tab.active::after {
@@ -3246,8 +3345,9 @@ select {
   bottom: -1px;
   left: 0;
   width: 100%;
-  height: 2px;
-  background: var(--primary);
+  height: 3px;
+  background: var(--accent); /* Brand Gold highlighter */
+  box-shadow: 0 0 10px rgba(201, 168, 76, 0.4);
 }
 
 .auth-body {
