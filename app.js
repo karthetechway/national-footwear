@@ -767,7 +767,7 @@ function payWithRazorpay(amount) {
     currency: "INR",
     name: BRAND.name,
     description: "Purchase from National Footwear",
-    image: "images/logo-dark.png", 
+    image: "https://firebasestorage.googleapis.com/v0/b/national-footwear.firebasestorage.app/o/Images%2Flogo.jpeg?alt=media", 
     handler: function (response) {
       finishOrder(response.razorpay_payment_id);
     },
@@ -1190,8 +1190,8 @@ const POLICIES = {
     content: "We offer professional door-to-door delivery across India. Orders are typically processed within 24-48 hours and delivered within 5-7 business days. Tracking details are sent via SMS and Email once dispatched."
   },
   returns: {
-    title: "Returns & Exchanges",
-    content: "We take pride in our quality and only source 100% original products. If you have any issues with size or quality, please contact our support team through your dashboard to initiate an exchange request."
+    title: "Cancellation & Refund Policy",
+    content: "Orders can only be cancelled **before they are dispatched**. To cancel an order, please contact our support immediately. Once an order is dispatched, we do **not** accept returns, exchanges, or refund requests. This ensures our 100% original quality standards are maintained for every customer."
   },
   terms: {
     title: "Terms of Service",

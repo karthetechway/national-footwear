@@ -17,7 +17,7 @@ const BRAND = {
   founded: "1995",
   freeDeliveryAbove: 99999,
   deliveryDays: 5,
-  returnDays: 30,
+  returnDays: 0, // Refunds only allowed BEFORE dispatch. No returns/exchanges after.
 
   // Social Media
   social: {
@@ -50,6 +50,8 @@ const FIREBASE_CONFIG = {
   appId: "1:506367413362:web:0e199c3a76ee4568ab86eb",
   databaseURL: "https://national-footwear-default-rtdb.asia-southeast1.firebasedatabase.app/"
 };
+
+const LOGO_URL = "https://firebasestorage.googleapis.com/v0/b/national-footwear.firebasestorage.app/o/Images%2Flogo.jpeg?alt=media";
 
 const RAZORPAY_KEY_ID = "rzp_test_YOUR_KEY_HERE"; // Replace with live key from Razorpay dashboard
 
